@@ -29,17 +29,17 @@ export function BookCard({ book, onAdd, adding, saved }: BookCardProps) {
         )}
       </div>
       <div className="flex flex-col gap-0.5 flex-1">
-        <p className="text-sm font-semibold leading-tight line-clamp-2">{book.title}</p>
-        <p className="text-xs text-gray-500 line-clamp-1">{book.author}</p>
+        <p className="text-sm font-semibold leading-tight line-clamp-2 text-gray-900">{book.title}</p>
+        <p className="text-xs text-gray-700 line-clamp-1">{book.author}</p>
         {book.page_count && (
-          <p className="text-xs text-gray-400">{book.page_count} pages</p>
+          <p className="text-xs text-gray-500">{book.page_count} pages</p>
         )}
       </div>
       {onAdd && (
         <button
           onClick={onAdd}
           disabled={adding || saved}
-          className="mt-auto w-full rounded-lg border border-gray-900 py-1.5 text-xs font-medium disabled:opacity-50 hover:bg-gray-900 hover:text-white transition-colors"
+          className="mt-auto w-full rounded-lg border border-gray-900 bg-gray-900 text-white py-1.5 text-xs font-medium disabled:opacity-50 hover:bg-gray-700 hover:border-gray-700 transition-colors"
         >
           {saved ? "Saved" : adding ? "Adding…" : "Add to Shelf"}
         </button>

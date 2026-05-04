@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { Book, SearchResult } from "@/lib/types";
 import { SearchBar } from "@/components/SearchBar";
@@ -9,6 +10,7 @@ import { MyShelf } from "@/components/MyShelf";
 import { Toast } from "@/components/Toast";
 
 export default function BookShelfPage() {
+  const router = useRouter();
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [searching, setSearching] = useState(false);
 
@@ -71,9 +73,22 @@ export default function BookShelfPage() {
     setAddingId(null);
   }
 
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+    router.push("/login");
+  }
+
   return (
     <main className="max-w-5xl mx-auto px-4 py-10 flex flex-col gap-10">
-      <h1 className="text-2xl font-bold">My Book Shelf</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">My Book Shelf</h1>
+        <button
+          onClick={handleSignOut}
+          className="text-sm text-gray-500 hover:text-gray-900 transition-colors"
+        >
+          Sign out
+        </button>
+      </div>
 
       <SearchBar onSearch={handleSearch} loading={searching} />
 
