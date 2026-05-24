@@ -1,16 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { SearchResult } from "@/lib/types";
+import { ReadingStatus, SearchResult, STATUS_LABELS } from "@/lib/types";
 
 interface BookCardProps {
   book: SearchResult;
   onAdd?: () => void;
   adding?: boolean;
   saved?: boolean;
+  status?: ReadingStatus;
+  onStatusChange?: (status: ReadingStatus) => void;
 }
 
-export function BookCard({ book, onAdd, adding, saved }: BookCardProps) {
+export function BookCard({ book, onAdd, adding, saved, status, onStatusChange }: BookCardProps) {
   return (
     <div className="flex flex-col gap-2 rounded-xl border border-gray-200 p-3 bg-white shadow-sm">
       <div className="relative h-40 w-full bg-gray-100 rounded-md overflow-hidden">
@@ -35,6 +37,17 @@ export function BookCard({ book, onAdd, adding, saved }: BookCardProps) {
           <p className="text-xs text-gray-500">{book.page_count} pages</p>
         )}
       </div>
+      {status && onStatusChange && (
+        <select
+          value={status}
+          onChange={(e) => onStatusChange(e.target.value as ReadingStatus)}
+          className="mt-auto w-full rounded-lg border border-gray-200 bg-gray-50 text-gray-700 py-1.5 text-xs font-medium cursor-pointer hover:border-gray-400 transition-colors"
+        >
+          {(Object.keys(STATUS_LABELS) as ReadingStatus[]).map((s) => (
+            <option key={s} value={s}>{STATUS_LABELS[s]}</option>
+          ))}
+        </select>
+      )}
       {onAdd && (
         <button
           onClick={onAdd}

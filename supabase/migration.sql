@@ -23,3 +23,11 @@ create policy "Users can insert own books"
 create policy "Users can delete own books"
   on books for delete
   using (auth.uid() = user_id);
+
+create policy "Users can update own books"
+  on books for update
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+alter table books add column if not exists status text not null default 'to_read'
+  check (status in ('to_read', 'currently_reading', 'read'));

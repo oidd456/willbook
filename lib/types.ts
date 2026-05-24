@@ -1,3 +1,11 @@
+export type ReadingStatus = 'to_read' | 'currently_reading' | 'read';
+
+export const STATUS_LABELS: Record<ReadingStatus, string> = {
+  to_read: 'To Read',
+  currently_reading: 'Currently Reading',
+  read: 'Read',
+};
+
 export interface Book {
   id: string;
   user_id: string;
@@ -7,6 +15,7 @@ export interface Book {
   cover_url: string | null;
   page_count: number | null;
   added_at: string;
+  status: ReadingStatus;
 }
 
 export interface GoogleBooksVolume {

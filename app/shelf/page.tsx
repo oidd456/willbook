@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { Book, SearchResult } from "@/lib/types";
+import { Book, ReadingStatus, SearchResult } from "@/lib/types";
 import { SearchBar } from "@/components/SearchBar";
 import { SearchResults } from "@/components/SearchResults";
 import { MyShelf } from "@/components/MyShelf";
@@ -73,6 +73,11 @@ export default function BookShelfPage() {
     setAddingId(null);
   }
 
+  async function handleStatusChange(bookId: string, status: ReadingStatus) {
+    await supabase.from("books").update({ status }).eq("id", bookId);
+    setShelf((prev) => prev.map((b) => (b.id === bookId ? { ...b, status } : b)));
+  }
+
   async function handleSignOut() {
     await supabase.auth.signOut();
     router.push("/login");
@@ -99,7 +104,7 @@ export default function BookShelfPage() {
         onAdd={handleAdd}
       />
 
-      <MyShelf books={shelf} />
+      <MyShelf books={shelf} onStatusChange={handleStatusChange} />
 
       {toast && <Toast message={toast} onDismiss={() => setToast(null)} />}
     </main>
