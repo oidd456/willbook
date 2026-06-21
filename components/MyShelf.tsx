@@ -6,11 +6,13 @@ import { BookCard } from "./BookCard";
 interface MyShelfProps {
   books: Book[];
   onStatusChange: (bookId: string, status: ReadingStatus) => void;
+  progressMap: Record<string, number>;
+  onProgressUpdate: (bookId: string, page: number) => void;
 }
 
 const SECTION_ORDER: ReadingStatus[] = ['currently_reading', 'to_read', 'read'];
 
-export function MyShelf({ books, onStatusChange }: MyShelfProps) {
+export function MyShelf({ books, onStatusChange, progressMap, onProgressUpdate }: MyShelfProps) {
   if (books.length === 0) {
     return (
       <section>
@@ -47,6 +49,8 @@ export function MyShelf({ books, onStatusChange }: MyShelfProps) {
                   }}
                   status={book.status}
                   onStatusChange={(s) => onStatusChange(book.id, s)}
+                  currentPage={progressMap[book.id]}
+                  onProgressUpdate={(page) => onProgressUpdate(book.id, page)}
                 />
               ))}
             </div>

@@ -98,6 +98,12 @@ supabase/migration.sql  — full DB schema
 - `MyShelf` now groups books into three sections: Currently Reading → To Read → Read (empty sections hidden)
 - Status changes are persisted to Supabase and updated optimistically in local state
 
+### Session 4
+- Added page-level reading progress tracking for `currently_reading` books
+- Created `reading_progress` table in Supabase (history table — one row per update, not a single column on `books`) with RLS restricted to the owning user
+- Added `ReadingProgress` type to `lib/types.ts`; added `progressMap` state (`Record<string, number>`) to shelf page, populated by fetching all progress rows and reducing to latest-per-book in JS
+- `BookCard` now shows a controlled page number input + Update button for `currently_reading` books, plus a "Page X of Y (Z%)" display once progress exists; `handleProgressUpdate` inserts a new row and updates local state on success
+
 ### Session 3
 - Fixed bug in `handleStatusChange` (`app/shelf/page.tsx`): now checks the error returned by Supabase `.update()` before patching local state. Previously a failed write would silently show the wrong status until the next page load. On error, a toast is now shown and local state is left unchanged.
 - Fixed low-contrast email input text on login page: added `text-gray-900` to the input's Tailwind classes.

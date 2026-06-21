@@ -89,7 +89,16 @@ Checkpoint run against the `handleStatusChange` bug fix (Session 3). All three b
 
 **Understanding checkpoint:** For the progress tracking feature specifically, I can explain the data model decisions made (why a history table and not a column on `books`, why `user_id` is duplicated, why page-based and not chapter-based) and the MVP display approach (latest-per-book in application code, not SQL).
 
-**Status:** 🟡 Design complete, build not yet started
+**Build steps:**
+- [ ] Step 1 — Database migration: create `reading_progress` table + RLS in Supabase
+- [x] Step 2 — Type definitions: add `ReadingProgress` type to `lib/types.ts`
+- [x] Step 3 — Fetch progress data in `app/shelf/page.tsx`; compute latest-page-per-book in JS
+- [x] Step 4 — Add `progressMap` state (`Record<string, number>`) to shelf page
+- [x] Step 5 — Pass progress down through `MyShelf` → `BookCard` as props
+- [x] Step 6 — Progress UI on `BookCard`: controlled page input + Update button + "X of Y (Z%)" display
+- [x] Step 7 — `handleProgressUpdate` handler: insert new row, update local state on success
+
+**Status:** ✅ Complete (2026-06-22)
 
 ---
 
@@ -129,3 +138,4 @@ Checkpoint run against the `handleStatusChange` bug fix (Session 3). All three b
 - **2026-06-21** — Phase 1 build output complete. Updated `AGENTS.md` with a learning-mode rules block covering explain-before-coding, doc-calibrated explanations, boring-over-clever bias, new-syntax *and* new-combination flagging, no silent dependency additions, Build Log discipline, and flag-don't-fix-silently for drive-by bugs. Checkpoint itself still pending a real Claude Code session.
 - **2026-06-21** — Reconciled repo copy of this file (which had been committed before Phase 1's final update landed) with the actual final session state. Lesson: claude.ai chat can read this repo via project search but cannot write to it — updates have to be manually committed or done via Claude Code, so periodic reconciliation like this may be needed when work happens primarily in chat.
 - **2026-06-21** — Fixed the parking lot bug: `handleStatusChange` now checks for a Supabase error before patching local state, and shows a toast on failure. Parking lot cleared.
+- **2026-06-22** — Phase 2 complete. Built reading progress tracking end-to-end: Supabase table + RLS, `ReadingProgress` type, fetch + latest-per-book map in shelf page, controlled page input + "Page X of Y (Z%)" display on `BookCard`, insert handler following the same error-check pattern as `handleStatusChange`. All 7 build steps completed and manually verified in browser (progress display, two updates, both rows confirmed in Supabase).

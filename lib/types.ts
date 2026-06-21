@@ -28,6 +28,15 @@ export interface GoogleBooksVolume {
   };
 }
 
+export interface ReadingProgress {
+  id: string;
+  book_id: string;
+  user_id: string;
+  page: number;
+  note: string | null;
+  logged_at: string;
+}
+
 export interface SearchResult {
   id: string;
   title: string;

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { Book, ReadingStatus, SearchResult } from "@/lib/types";
+import { Book, ReadingProgress, ReadingStatus, SearchResult } from "@/lib/types";
 import { SearchBar } from "@/components/SearchBar";
 import { SearchResults } from "@/components/SearchResults";
 import { MyShelf } from "@/components/MyShelf";
@@ -17,6 +17,8 @@ export default function BookShelfPage() {
   const [shelf, setShelf] = useState<Book[]>([]);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [addingId, setAddingId] = useState<string | null>(null);
+
+  const [progressMap, setProgressMap] = useState<Record<string, number>>({});
 
   const [toast, setToast] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
@@ -37,6 +39,19 @@ export default function BookShelfPage() {
     if (data) {
       setShelf(data as Book[]);
       setSavedIds(new Set(data.map((b: Book) => b.google_books_id)));
+    }
+
+    const { data: progressData } = await supabase
+      .from("reading_progress")
+      .select("*")
+      .eq("user_id", userId)
+      .order("logged_at", { ascending: true });
+    if (progressData) {
+      const map: Record<string, number> = {};
+      for (const row of progressData as ReadingProgress[]) {
+        map[row.book_id] = row.page;
+      }
+      setProgressMap(map);
     }
   }, [userId]);
 
@@ -82,6 +97,21 @@ export default function BookShelfPage() {
     setShelf((prev) => prev.map((b) => (b.id === bookId ? { ...b, status } : b)));
   }
 
+  async function handleProgressUpdate(bookId: string, page: number) {
+    if (!userId) return;
+    const { error } = await supabase.from("reading_progress").insert({
+      book_id: bookId,
+      user_id: userId,
+      page,
+    });
+    if (error) {
+      setToast("Failed to update progress — please try again");
+      return;
+    }
+    setProgressMap((prev) => ({ ...prev, [bookId]: page }));
+    setToast("Progress updated");
+  }
+
   async function handleSignOut() {
     await supabase.auth.signOut();
     router.push("/login");
@@ -118,7 +148,7 @@ export default function BookShelfPage() {
         onAdd={handleAdd}
       />
 
-      <MyShelf books={shelf} onStatusChange={handleStatusChange} />
+      <MyShelf books={shelf} onStatusChange={handleStatusChange} progressMap={progressMap} onProgressUpdate={handleProgressUpdate} />
 
       {toast && <Toast message={toast} onDismiss={() => setToast(null)} />}
     </main>
