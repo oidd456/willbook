@@ -66,11 +66,11 @@ Mid-phase finding: a stacked-operator snippet (`raw?.trim() ?? ""`) initially br
 
 **Understanding checkpoint:** I run one small change through Claude Code and the session unprompted (a) explains its approach first, (b) flags anything new, and (c) updates the Build Log — without me asking.
 
-**Status:** 🟡 Build output complete, checkpoint pending
+**Status:** ✅ Complete (2026-06-21)
 
 `AGENTS.md` updated with a `learning-mode-rules` block: explain-before-coding, calibrate against `LEARNING_PLAN.md`/`SYNTAX_NOTES.md`, prefer boring/explainable solutions, flag new syntax *and* new combinations of familiar syntax (direct lesson from the Phase 0.5 `?.`/`??` stumble), don't silently introduce new libraries, Build Log entries after non-trivial changes, flag (don't auto-edit) `HOW_IT_WORKS.md` staleness, and don't silently fix drive-by bugs — flag and ask first. A "non-trivial" carve-out excludes mechanical changes (typos, formatting, styling-only tweaks) from the ceremony.
 
-Checkpoint not yet run — requires an actual Claude Code session on a real change to confirm the rules are followed unprompted, which can't be verified from inside a chat conversation. Next time Claude Code is used for a real change, check whether all three behaviors fire without being asked.
+Checkpoint run against the `handleStatusChange` bug fix (Session 3). All three behaviors fired unprompted: (a) approach explained in plain language before any code was written, including why this solution mirrors `handleAdd`'s existing pattern; (b) new-syntax flag correctly fired as a negative — explicitly noted nothing new was introduced rather than staying silent; (c) Build Log entry appended to `docs/PROJECT.md` without being asked. Checkpoint passes.
 
 ---
 
@@ -113,7 +113,7 @@ Checkpoint not yet run — requires an actual Claude Code session on a real chan
 
 *(Things noted along the way that don't block the current phase but shouldn't be forgotten.)*
 
-- **Bug found during Phase 0, Slice D:** `handleStatusChange` in `app/shelf/page.tsx` has no error check on the Supabase `.update()` call before optimistically patching local state. If the write silently fails, the UI briefly shows the *correct* new status, then silently reverts to the old one on next page load/refresh — with no error message at any point. Worth fixing as part of Phase 3 (production hygiene), or as a small standalone Phase 2-style trial run if I want hands-on practice sooner.
+*(empty — no open items)*
 
 ---
 
@@ -128,3 +128,4 @@ Checkpoint not yet run — requires an actual Claude Code session on a real chan
 - **2026-06-21** — Phase 0.5 complete. Covered plain async function handlers, full file/folder architecture (routing, dynamic segments, page.tsx vs route.ts, middleware/components/lib placement). Checkpoint snippet initially exposed a real gap — stacked unfamiliar operators (`?.`, `??`) read incorrectly on first attempt despite each being understood in isolation. Built a contrastive operator reference table to fix it; retried the same checkpoint snippet and passed cleanly.
 - **2026-06-21** — Phase 1 build output complete. Updated `AGENTS.md` with a learning-mode rules block covering explain-before-coding, doc-calibrated explanations, boring-over-clever bias, new-syntax *and* new-combination flagging, no silent dependency additions, Build Log discipline, and flag-don't-fix-silently for drive-by bugs. Checkpoint itself still pending a real Claude Code session.
 - **2026-06-21** — Reconciled repo copy of this file (which had been committed before Phase 1's final update landed) with the actual final session state. Lesson: claude.ai chat can read this repo via project search but cannot write to it — updates have to be manually committed or done via Claude Code, so periodic reconciliation like this may be needed when work happens primarily in chat.
+- **2026-06-21** — Fixed the parking lot bug: `handleStatusChange` now checks for a Supabase error before patching local state, and shows a toast on failure. Parking lot cleared.

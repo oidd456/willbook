@@ -74,7 +74,11 @@ export default function BookShelfPage() {
   }
 
   async function handleStatusChange(bookId: string, status: ReadingStatus) {
-    await supabase.from("books").update({ status }).eq("id", bookId);
+    const { error } = await supabase.from("books").update({ status }).eq("id", bookId);
+    if (error) {
+      setToast("Failed to update reading status — please try again");
+      return;
+    }
     setShelf((prev) => prev.map((b) => (b.id === bookId ? { ...b, status } : b)));
   }
 

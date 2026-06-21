@@ -77,3 +77,6 @@ supabase/migration.sql  — full DB schema
 - `BookCard` now shows a status `<select>` dropdown when rendered on the shelf
 - `MyShelf` now groups books into three sections: Currently Reading → To Read → Read (empty sections hidden)
 - Status changes are persisted to Supabase and updated optimistically in local state
+
+### Session 3
+- Fixed bug in `handleStatusChange` (`app/shelf/page.tsx`): now checks the error returned by Supabase `.update()` before patching local state. Previously a failed write would silently show the wrong status until the next page load. On error, a toast is now shown and local state is left unchanged.
