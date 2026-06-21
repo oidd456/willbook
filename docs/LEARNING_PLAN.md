@@ -78,7 +78,7 @@ Checkpoint run against the `handleStatusChange` bug fix (Session 3). All three b
 
 **Goal:** Establish the repeatable loop for every feature from here on: design → build → read → integrate.
 
-**Candidate feature:** Per-book reading journal/notes (already scoped as "next" in `docs/PROJECT.md`).
+**Candidate feature:** Page-level reading progress tracking (re-scoped from journal/notes — see `docs/PROJECT.md` Post-MVP section for reasoning). Data model designed in a separate planning session; build is the next step.
 
 **The loop (repeat for every feature going forward):**
 1. **Design on paper first** — sketch the data model (new table? new columns? new RLS policy?) and the user flow, before any code is written. This is where I get to push back, ask "why this shape and not another," and build the muscle of thinking in data models.
@@ -87,9 +87,9 @@ Checkpoint run against the `handleStatusChange` bug fix (Session 3). All three b
 4. **Explain it back** — I summarize, in my own words, what the feature does end-to-end. If I can't, that's a signal to slow down, not skip ahead.
 5. **Update the mental model doc** — add any new concept introduced to `docs/HOW_IT_WORKS.md`.
 
-**Understanding checkpoint:** For the journal feature specifically, I can explain the data model decisions I made (not just what Claude Code chose) and why.
+**Understanding checkpoint:** For the progress tracking feature specifically, I can explain the data model decisions made (why a history table and not a column on `books`, why `user_id` is duplicated, why page-based and not chapter-based) and the MVP display approach (latest-per-book in application code, not SQL).
 
-**Status:** ⬜ Not started
+**Status:** 🟡 Design complete, build not yet started
 
 ---
 

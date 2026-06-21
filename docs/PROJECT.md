@@ -11,8 +11,9 @@ A book discovery and journaling app that makes it easy for readers to find books
 3. **Reading status** — categorize books as "To Read", "Currently Reading", or "Read"
 4. **Collections view** — see books grouped by status
 
-Post-MVP (not yet started):
-- Per-book reading journal / notes
+Post-MVP:
+- **Page-level reading progress tracking** *(next up — designed, not yet built)*: log the page you're on for any `currently_reading` book, enabling a progress percentage using `books.page_count`. Designed as a separate `reading_progress` history table — see Data Model below.
+- **Per-book journal / notes** *(deferred)*: expected to become a natural extension of the `reading_progress` table (a richer note alongside a progress update), rather than a separate feature. Not the next thing.
 - Richer discovery features (recommendations, genres, ratings)
 
 ## Tech Stack
@@ -39,6 +40,25 @@ Post-MVP (not yet started):
 | added_at | timestamptz | |
 
 RLS: users can only read/insert/update/delete their own rows.
+
+### `reading_progress` table *(designed, not yet implemented)*
+| Column | Type | Notes |
+|---|---|---|
+| id | uuid | PK |
+| book_id | uuid | FK → books.id |
+| user_id | uuid | FK → auth.users |
+| page | integer | the page reached at this log entry |
+| note | text | nullable — optional reflection alongside the update |
+| logged_at | timestamptz | when this entry was recorded |
+
+RLS: same pattern as `books` — restricted to `auth.uid() = user_id`, checked directly on this table (not via a join to `books`).
+
+Design decisions:
+- **Page-based, not chapter-based** — lets us compute a percentage using the existing `books.page_count`.
+- **History table, not a single column on `books`** — tracking progress *over time* was a deliberate choice; multiple rows per book, one per logged update.
+- **`user_id` duplicated here, not inferred via join** — keeps RLS self-contained, matching the `books` pattern.
+- **`note` is nullable** — most updates will be quick page bumps with no commentary.
+- **MVP display: latest progress only, no history view** — show the most recent row per book on the existing BookCard. "Latest per book" will be computed in application code (fetch all rows, find the latest per book in JS), not via a SQL window function — a deliberate "boring and explainable" choice.
 
 ## File Structure
 
