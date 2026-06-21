@@ -99,7 +99,17 @@ export default function BookShelfPage() {
         </button>
       </div>
 
-      <SearchBar onSearch={handleSearch} loading={searching} />
+      <div className="flex items-center gap-3">
+        <SearchBar onSearch={handleSearch} loading={searching} />
+        {searchResults.length > 0 && (
+          <button
+            onClick={() => setSearchResults([])}
+            className="text-sm text-gray-500 hover:text-gray-900 transition-colors whitespace-nowrap"
+          >
+            Clear results
+          </button>
+        )}
+      </div>
 
       <SearchResults
         results={searchResults}

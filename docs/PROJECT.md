@@ -80,3 +80,5 @@ supabase/migration.sql  — full DB schema
 
 ### Session 3
 - Fixed bug in `handleStatusChange` (`app/shelf/page.tsx`): now checks the error returned by Supabase `.update()` before patching local state. Previously a failed write would silently show the wrong status until the next page load. On error, a toast is now shown and local state is left unchanged.
+- Fixed low-contrast email input text on login page: added `text-gray-900` to the input's Tailwind classes.
+- Added "Clear results" button to shelf page: appears next to the search bar when results are showing, sets `searchResults` to `[]` on click.
