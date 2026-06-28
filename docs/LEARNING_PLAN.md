@@ -102,6 +102,35 @@ Checkpoint run against the `handleStatusChange` bug fix (Session 3). All three b
 
 ---
 
+## Phase 2.5 — Language and abstraction foundations
+
+**Goal:** Build genuine fluency in the syntax and higher-level concepts that appear throughout this codebase. Phase 0.5 covered syntax at a survey level; this phase goes deeper and fills the gaps that have surfaced since. The goal is to reach a point where no line in this repo is opaque — you can read it cold, name every piece, and explain what it does and why.
+
+**Why this sits before Phase 3:** Phase 3 (production hygiene) involves reading error messages, understanding environment config, and following a deploy pipeline. All of that requires fluency in the concepts below. Building on a shaky foundation produces confusion, not understanding.
+
+**Approach:** One concept per session, anchored to real lines from this codebase. For each concept: explain the idea, show it in the repo, then have Osh read a new instance cold and explain it back. No moving on until the cold read is clean. Each completed topic gets an entry in `docs/SYNTAX_NOTES.md`.
+
+**Curriculum (work through in order — each builds on the previous):**
+
+| # | Topic | What it covers |
+|---|---|---|
+| 1 | The module system | `import`/`export` — how code in one file gets used in another, named vs default exports, `import type` |
+| 2 | TypeScript's type system | Interfaces, generics (`Book[]`, `Record<string,number>`, `Set<string>`), union types (`string \| null`), the `?` family (all four roles), types vs values |
+| 3 | Arrow functions — all forms | Type form `(page: number) => void` vs code form `(page) => setPage(page)`, inline vs block body, `async` arrow functions |
+| 4 | Destructuring | Object destructuring, array destructuring, destructuring in function parameters, nested destructuring |
+| 5 | Callbacks and higher-order functions | Functions as values, passing a function as an argument, why every `onAdd`/`onStatusChange` prop works this way |
+| 6 | Array methods | `.map()`, `.filter()`, `.forEach()` as applications of callbacks — what each returns and when to use which |
+| 7 | `async`/`await` and Promises | What asynchronous means, what a Promise is, why JavaScript needs this, how `await` pauses execution |
+| 8 | React's rendering model | What triggers a re-render, how `useState` causes React to re-run the component function, what the virtual DOM is doing |
+| 9 | The client/server boundary | What `"use client"` means, what runs in the browser vs the server, why the split exists and what it protects |
+| 10 | Environment variables | What `process.env` is, why secrets don't live in code, what `NEXT_PUBLIC_` means and why it matters |
+
+**Understanding checkpoint:** Given any file in this repo, Osh can read it line by line — naming every syntax construct, explaining what it does, and identifying which higher-level abstraction it expresses — without prompting.
+
+**Status:** 🔵 In progress
+
+---
+
 ## Phase 3 — Production hygiene
 
 **Goal:** Address the unglamorous parts a demo skips but a real product needs.
